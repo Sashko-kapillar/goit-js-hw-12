@@ -12,6 +12,7 @@ const perPage = 15; // Обмеження кількість завантаже�
 let page = 1;
 let totalPages = 0; //загальна кількість сторінок
 const lightbox = new SimpleLightbox('.gallery a');
+const loader = document.querySelector('.loader');
 
 /* ==================================================================== */
 
@@ -78,6 +79,7 @@ searchForm.addEventListener('submit', async event => {
       gallery.after(loadMoreButton);
 
       loadMoreButton.addEventListener('click', async () => {
+        toggleLoader(true);
         page++;
 
         const { hits } = await fetchImages(searchInput, page, perPage);
