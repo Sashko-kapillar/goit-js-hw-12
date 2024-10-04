@@ -14,10 +14,14 @@
   height: 100%;
   width: 0;
   background: #ff3d00;
-  animation: 24s prog ease-in infinite;
+  animation: 6s prog ease-in infinite;
 }
 @keyframes prog {
   to {
     width: 100%;
   }
+}
+
+.loader {
+  margin: 20px auto;
 }
