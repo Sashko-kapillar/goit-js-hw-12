@@ -2,70 +2,120 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
-import axios from 'axios';
+import { fetchImages } from './js/pixabay-api';
+import { toggleLoader } from './js/render-functions';
 
 const searchForm = document.querySelector('.search-form');
 const gallery = document.querySelector('.gallery');
-const apiKey = '46100469-a9a71a6d23d5188e64cb63582'; // Замініть на ваш ключ
+let loadMoreButton;
+const perPage = 15; // Обмеження кількість завантажень до 15 зображень на сторінку
+let page = 1;
+let totalPages = 0; //загальна кількість сторінок
 const lightbox = new SimpleLightbox('.gallery a');
 const loader = document.querySelector('.loader');
 
-searchForm.addEventListener('submit', event => {
+/* ==================================================================== */
+
+searchForm.addEventListener('submit', async event => {
   event.preventDefault();
-  const searchInput = document.querySelector('input[name="search"]').value;
-  gallery.innerHTML = ''; // Очистити галерею перед новим пошуком
+  const searchInput = document
+    .querySelector('input[name="search"]')
+    .value.trim();
+  gallery.innerHTML = '';
+  if (loadMoreButton) {
+    loadMoreButton.remove();
+  }
+  let loadedImages = 0; // Кількість завантажених зображень
 
-  axios
-    .get(
-      `https://pixabay.com/api/?key=${apiKey}&q=${searchInput}&image_type=photo&orientation=horizontal&safesearch=true&_limit=9`
-    )
-    .then(response => {
-      const hits = response.data.hits;
-      console.log(hits);
+  page = 1;
 
-      if (hits.length === 0) {
-        iziToast.show({
-          title: 'Error',
-          message:
-            'Sorry, there are no images matching your search query. Please try again!',
-          color: 'red',
-          position: 'topCenter',
-        });
-      } else {
-        loader.style.display = 'block';
-        const totalImages = hits.length;
-        let loadedImages = 0; // Кількість завантажених зображень
+  try {
+    const { hits, total } = await fetchImages(searchInput, page, perPage); // деструктуризація
+    totalPages = Math.ceil(total / perPage);
+    console.log(totalPages);
 
+    if (hits.length === 0) {
+      iziToast.show({
+        title: 'Error',
+        message:
+          'Sorry, your search query is incorrect. Please, change something there!',
+        color: 'red',
+        position: 'topCenter',
+      });
+      return;
+    } else {
+      toggleLoader(true);
+      const totalImages = hits.length;
+
+      hits.forEach(hit => {
+        const galleryItem = document.createElement('li');
+        galleryItem.classList.add('gallery-item');
+        galleryItem.innerHTML = `
+          <a href="${hit.largeImageURL}">
+            <img src="${hit.webformatURL}" alt="${hit.tags}" class="gallery-image">
+          </a>
+        `;
+        gallery.appendChild(galleryItem);
+
+        // Оновлення прогресу завантаження після завантаження кожного зображення
+        const image = galleryItem.querySelector('.gallery-image');
+        image.onload = () => {
+          loadedImages++;
+          console.log(loadedImages);
+
+          if (loadedImages === totalImages) {
+            toggleLoader(false); // Приховати завантажувач після завантаження всіх зображень
+          }
+        };
+      });
+      lightbox.refresh();
+    }
+
+    if (hits.length >= perPage) {
+      loadMoreButton = document.createElement('button');
+      loadMoreButton.textContent = 'Load more';
+      loadMoreButton.classList.add('load-more');
+
+      gallery.after(loadMoreButton);
+
+      loadMoreButton.addEventListener('click', async () => {
+        page++;
+
+        const { hits } = await fetchImages(searchInput, page, perPage);
+        toggleLoader(true);
         hits.forEach(hit => {
           const galleryItem = document.createElement('li');
           galleryItem.classList.add('gallery-item');
           galleryItem.innerHTML = `
-            <a href="${hit.largeImageURL}">
-              <img src="${hit.webformatURL}" alt="${hit.tags}" class="gallery-image">
-            </a>
-          `;
+          <a href="${hit.largeImageURL}">
+            <img src="${hit.webformatURL}" alt="${hit.tags}" class="gallery-image">
+          </a>
+        `;
           gallery.appendChild(galleryItem);
-
-          // Оновлення прогресу завантаження після завантаження кожного зображення
-          const image = galleryItem.querySelector('.gallery-image');
-          image.onload = () => {
-            loadedImages++;
-            if (loadedImages === totalImages) {
-              loader.style.display = 'none'; // Приховати завантажувач після завантаження всіх зображень
-            }
-          };
         });
+        lightbox.refresh();
+        toggleLoader(false);
 
-        lightbox.refresh(); // Оновити SimpleLightbox
-      }
-    })
-    .catch(error => {
-      console.error(error); // Вивести помилку в консоль для відлагодження
-      iziToast.show({
-        title: 'Error',
-        message: 'Error - while loading images. Please open new images',
-        color: 'red',
-        position: 'topCenter',
+        if (page === totalPages) {
+          iziToast.show({
+            title: 'Infoline',
+            message: 'This is the last page',
+            color: 'green',
+            position: 'topCenter',
+          });
+          loadMoreButton.remove(); // Приховати кнопку, якщо це остання сторінка
+        }
       });
+    }
+  } catch (error) {
+    iziToast.show({
+      title: 'Error',
+      message:
+        'Sorry, you have not written anything. Еnter a few letters to search!',
+      color: 'red',
+      position: 'topCenter',
     });
+    return; // у разі помилки нічого не робимо
+  } finally {
+  }
 });
