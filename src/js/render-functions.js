@@ -1,42 +1,16 @@
-let formData = {
-  email: '',
-  message: '',
-};
+'use strict';
 
-const form = document.querySelector('.feedback-form');
+const loader = document.querySelector('.loader');
 
-// Відстеження змін у формі та збереження даних в локальному сховищі
-form.addEventListener('input', event => {
-  const { name, value } = event.target;
-  formData[name] = value;
-  localStorage.setItem('feedback-form-state', JSON.stringify(formData));
+export const apiKey = '46100469-a9a71a6d23d5188e64cb63582';
+
+export const searchParams = new URLSearchParams({
+  _limit: 15,
+  image_type: 'photo',
+  orientation: 'horizontal',
+  safesearch: true,
 });
 
-// Завантаження даних з локального сховища при завантаженні сторінки
-const storedData = localStorage.getItem('feedback-form-state');
-console.log(storedData);
-
-if (storedData) {
-  const parsedData = JSON.parse(storedData);
-  console.log(parsedData);
-  formData = parsedData;
-  form.elements.email.value = parsedData.email;
-  form.elements.message.value = parsedData.message;
+function toggleLoader(show) {
+  loader.style.display = show ? 'block' : 'none';
 }
-
-// Обробка відправки форми
-form.addEventListener('submit', event => {
-  event.preventDefault();
-
-  // Валідація даних
-  if (!formData.email || !formData.message) {
-    alert('Fill please all fields');
-    return;
-  }
-
-  // Очищення даних
-  localStorage.removeItem('feedback-form-state');
-  formData.email = '';
-  formData.message = '';
-  form.reset();
-});
