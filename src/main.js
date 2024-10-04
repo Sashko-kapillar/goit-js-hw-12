@@ -12,7 +12,6 @@ const perPage = 15; // Обмеження кількість завантаже�
 let page = 1;
 let totalPages = 0; //загальна кількість сторінок
 const lightbox = new SimpleLightbox('.gallery a');
-const loader = document.querySelector('.loader');
 
 /* ==================================================================== */
 

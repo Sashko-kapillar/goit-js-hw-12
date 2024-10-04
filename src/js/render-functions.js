@@ -11,6 +11,6 @@ export const searchParams = new URLSearchParams({
   safesearch: true,
 });
 
-function toggleLoader(show) {
+export function toggleLoader(show) {
   loader.style.display = show ? 'block' : 'none';
 }
