@@ -77,37 +77,53 @@ searchForm.addEventListener('submit', async event => {
       loadMoreButton.classList.add('load-more');
 
       gallery.after(loadMoreButton);
+    }
+    loadMoreButton.addEventListener('click', async () => {
+      page++;
 
-      loadMoreButton.addEventListener('click', async () => {
-        toggleLoader(true);
-        page++;
-
-        const { hits } = await fetchImages(searchInput, page, perPage);
-        toggleLoader(true);
-        hits.forEach(hit => {
-          const galleryItem = document.createElement('li');
-          galleryItem.classList.add('gallery-item');
-          galleryItem.innerHTML = `
+      const { hits } = await fetchImages(searchInput, page, perPage);
+      toggleLoader(true);
+      hits.forEach(hit => {
+        const galleryItem = document.createElement('li');
+        galleryItem.classList.add('gallery-item');
+        galleryItem.innerHTML = `
           <a href="${hit.largeImageURL}">
             <img src="${hit.webformatURL}" alt="${hit.tags}" class="gallery-image">
           </a>
         `;
-          gallery.appendChild(galleryItem);
-        });
-        lightbox.refresh();
-        toggleLoader(false);
-
-        if (page === totalPages) {
-          iziToast.show({
-            title: 'Infoline',
-            message: 'This is the last page',
-            color: 'green',
-            position: 'topCenter',
-          });
-          loadMoreButton.remove(); // Приховати кнопку, якщо це остання сторінка
-        }
+        gallery.appendChild(galleryItem);
+        console.log(loadedImages);
+        const image = galleryItem.querySelector('.gallery-image');
+        loadedImages = 0;
+        image.onload = () => {
+          loadedImages++;
+          console.log(loadedImages);
+          console.log(hits.length);
+          if (loadedImages === hits.length) {
+            toggleLoader(false); // Приховати завантажувач після завантаження всіх зображень
+          }
+        };
       });
-    }
+      lightbox.refresh();
+      // toggleLoader(false);
+      const galleryItem = document.querySelector('.gallery-item');
+      if (galleryItem) {
+        const { height } = galleryItem.getBoundingClientRect();
+        window.scrollBy({
+          top: height * 2, // Прокрутка на дві висоти карточки
+          behavior: 'smooth', // Плавна прокрутка
+        });
+      }
+      if (page === totalPages) {
+        iziToast.show({
+          title: 'Infoline',
+          message: 'This is the last page',
+          color: 'green',
+          position: 'topCenter',
+        });
+        loadMoreButton.remove(); // Приховати кнопку, якщо це остання сторінка
+      }
+    });
   } catch (error) {
     iziToast.show({
       title: 'Error',
