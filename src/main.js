@@ -79,6 +79,9 @@ searchForm.addEventListener('submit', async event => {
       loadMoreButton.classList.add('load-more');
 
       gallery.after(loadMoreButton);
+      const loadMoreButton = document.querySelector('.load-more');
+      // Перемістимо loader після кнопки Load more
+      loadMoreButton.parentNode.insertBefore(loader, loadMoreButton);
     }
     loadMoreButton.addEventListener('click', async () => {
       page++;
