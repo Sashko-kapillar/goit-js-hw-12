@@ -25,5 +25,14 @@ export async function fetchImages(searchInput, page, perPage) {
       hits: response.data.hits,
       total: response.data.total,
     };
-  } catch (error) {}
+  } catch (error) {
+    console.error('Помилка при отриманні даних з Pixabay:', error);
+    iziToast.show({
+      title: 'Помилка',
+      message:
+        'Виникла помилка при пошуку зображень. Будь ласка, спробуйте пізніше.',
+      color: 'red',
+      position: 'topCenter',
+    });
+  }
 }
