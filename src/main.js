@@ -40,8 +40,7 @@ searchForm.addEventListener('submit', async event => {
     if (hits.length === 0) {
       iziToast.show({
         title: 'Error',
-        message:
-          'Вибачте, ви нічого не написали зрозумілою мовою. Введіть людське слово для пошуку!',
+        message: 'Sorry',
         color: 'red',
         position: 'topCenter',
       });
@@ -131,7 +130,7 @@ searchForm.addEventListener('submit', async event => {
     iziToast.show({
       title: 'Error',
       message:
-        'Sorry, you have not written anything. Еnter a few letters to search!',
+        'Вибачте, ви нічого не написали зрозумілою мовою. Введіть людське слово для пошуку!',
       color: 'red',
       position: 'topCenter',
     });
