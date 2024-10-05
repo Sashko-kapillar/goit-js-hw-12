@@ -31,7 +31,7 @@ searchForm.addEventListener('submit', async event => {
   let loadedImages = 0; // Кількість завантажених зображень
 
   page = 1;
-
+  toggleLoader(true);
   try {
     const { hits, total } = await fetchImages(searchInput, page, perPage); // деструктуризація
     totalPages = Math.ceil(total / perPage);
@@ -40,13 +40,13 @@ searchForm.addEventListener('submit', async event => {
     if (hits.length === 0) {
       iziToast.show({
         title: 'Error',
-        message: 'Sorry',
+        message: 'Sorry, ваш запит якийсь дивний. Напишіть щось зрозуміле',
         color: 'red',
         position: 'topCenter',
       });
       return;
     } else {
-      toggleLoader(true);
+      // toggleLoader(true);
       const totalImages = hits.length;
 
       hits.forEach(hit => {
@@ -79,11 +79,12 @@ searchForm.addEventListener('submit', async event => {
       loadMoreButton.classList.add('load-more');
 
       gallery.after(loadMoreButton);
-      const loadMoreButton = document.querySelector('.load-more');
-      // Перемістимо loader після кнопки Load more
-      loadMoreButton.parentNode.insertBefore(loader, loadMoreButton);
     }
+
     loadMoreButton.addEventListener('click', async () => {
+      const loadMoreBtn = document.querySelector('.load-more');
+      // Перемістимо loader після кнопки Load more
+      loadMoreBtn.parentNode.insertBefore(loader, loadMoreBtn);
       page++;
 
       const { hits } = await fetchImages(searchInput, page, perPage);
