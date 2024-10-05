@@ -31,7 +31,6 @@ searchForm.addEventListener('submit', async event => {
   let loadedImages = 0; // Кількість завантажених зображень
 
   page = 1;
-  toggleLoader(true);
   try {
     const { hits, total } = await fetchImages(searchInput, page, perPage); // деструктуризація
     totalPages = Math.ceil(total / perPage);
@@ -46,7 +45,7 @@ searchForm.addEventListener('submit', async event => {
       });
       return;
     } else {
-      // toggleLoader(true);
+      toggleLoader(true);
       const totalImages = hits.length;
 
       hits.forEach(hit => {
