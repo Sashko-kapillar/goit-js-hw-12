@@ -41,7 +41,7 @@ searchForm.addEventListener('submit', async event => {
       iziToast.show({
         title: 'Error',
         message:
-          'Sorry, your search query is incorrect. Please, change something there!',
+          'Вибачте, ви нічого не написали зрозумілою мовою. Введіть людське слово для пошуку!',
         color: 'red',
         position: 'topCenter',
       });
