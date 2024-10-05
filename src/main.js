@@ -25,6 +25,9 @@ searchForm.addEventListener('submit', async event => {
   if (loadMoreButton) {
     loadMoreButton.remove();
   }
+  if (toggleLoader) {
+    toggleLoader(false);
+  }
   let loadedImages = 0; // Кількість завантажених зображень
 
   page = 1;
