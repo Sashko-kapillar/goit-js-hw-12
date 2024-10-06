@@ -29,7 +29,8 @@ searchForm.addEventListener('submit', async event => {
   if (searchValue === '') {
     loader.classList.add('hidden');
     iziToast.warning({
-      message: 'Please fill this field',
+      message:
+        'Sorry, це типу що? порожнє поле у запиті? напиши щось людске...',
       position: 'topCenter',
     });
     return;
@@ -74,7 +75,7 @@ searchForm.addEventListener('submit', async event => {
   } catch (error) {
     console.error('Error during receiving images:', error);
     iziToast.error({
-      message: 'Something went wrong! Please try again later.',
+      message: 'А то вже капець як страшно! Please try again later.',
       position: 'topCenter',
     });
     loader.classList.add('hidden');
