@@ -1,3 +1,6 @@
+// import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import { fetchImages } from './js/pixabay-api';
@@ -17,12 +20,19 @@ let totalImg = 0;
 searchForm.addEventListener('submit', async event => {
   event.preventDefault();
   loader.classList.remove('hidden');
+  alert(
+    'зробив рефакторинг, все одно не розумію до кінця і що з цим робити???'
+  );
+  if (loadMoreBtn) {
+    loadMoreBtn.classList.add('hidden');
+  }
   page = 1;
   searchValue = searchInput.value.trim();
   if (searchValue === '') {
+    loader.classList.add('hidden');
     iziToast.warning({
       message: 'Please fill this field',
-      position: 'topRight',
+      position: 'topCenter',
     });
     return;
   }
@@ -31,13 +41,12 @@ searchForm.addEventListener('submit', async event => {
 
   try {
     const { hits, totalHits } = await fetchImages(searchValue, page);
-    loader.classList.add('hidden');
 
     if (hits.length === 0) {
       iziToast.info({
-        message:
-          'Sorry, there are no images matching your search query. Please try again!',
-        position: 'topRight',
+        message: 'Sorry, такий собі запит... Придумай щось краще!',
+        position: 'topCenter',
+        color: 'red',
       });
       loader.classList.add('hidden');
       loadMoreBtn.classList.add('hidden');
@@ -52,19 +61,22 @@ searchForm.addEventListener('submit', async event => {
     loader.classList.add('hidden');
     console.log(loadedImg);
     console.log(totalImg);
-    if (loadedImg >= totalImg) {
+    if (loadedImg < totalImg) {
       loadMoreBtn.classList.remove('hidden');
       loader.classList.add('hidden');
+    }
+    if (loadedImg >= totalImg) {
+      loadMoreBtn.classList.add('hidden');
       iziToast.info({
         message: "We're sorry, but you've reached the end of search results.",
-        position: 'topRight',
+        position: 'topCenter',
       });
     }
   } catch (error) {
     console.error('Error during receiving images:', error);
     iziToast.error({
       message: 'Something went wrong! Please try again later.',
-      position: 'topRight',
+      position: 'topCenter',
     });
     loader.classList.add('hidden');
   }
@@ -83,12 +95,16 @@ loadMoreBtn.addEventListener('click', async () => {
     console.log(loadedImg);
     console.log(totalImg);
 
-    if (loadedImg >= totalImg) {
+    if (loadedImg < totalImg) {
       loadMoreBtn.classList.remove('hidden');
       loader.classList.add('hidden');
+    }
+
+    if (loadedImg >= totalImg) {
+      loadMoreBtn.classList.add('hidden');
       iziToast.info({
         message: "We're sorry, but you've reached the end of search results.",
-        position: 'topRight',
+        position: 'topCenter',
       });
     }
 
