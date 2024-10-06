@@ -20,9 +20,7 @@ let totalImg = 0;
 searchForm.addEventListener('submit', async event => {
   event.preventDefault();
   loader.classList.remove('hidden');
-  alert(
-    'зробив рефакторинг, все одно не розумію до кінця і що з цим робити???'
-  );
+
   if (loadMoreBtn) {
     loadMoreBtn.classList.add('hidden');
   }
@@ -68,8 +66,9 @@ searchForm.addEventListener('submit', async event => {
     if (loadedImg >= totalImg) {
       loadMoreBtn.classList.add('hidden');
       iziToast.info({
-        message: "We're sorry, but you've reached the end of search results.",
+        message: 'Ой, це що, вже кінець колекції ?',
         position: 'topCenter',
+        color: 'green',
       });
     }
   } catch (error) {
@@ -103,8 +102,9 @@ loadMoreBtn.addEventListener('click', async () => {
     if (loadedImg >= totalImg) {
       loadMoreBtn.classList.add('hidden');
       iziToast.info({
-        message: "We're sorry, but you've reached the end of search results.",
+        message: 'Ой, це що, вже кінець колекції ?',
         position: 'topCenter',
+        color: 'green',
       });
     }
 
@@ -119,5 +119,9 @@ loadMoreBtn.addEventListener('click', async () => {
     });
   } catch (error) {
     console.error('Error loading additional images:', error);
+  } finally {
+    alert(
+      'зробив рефакторинг, все одно не розумію до кінця і що з цим робити???'
+    );
   }
 });
