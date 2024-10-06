@@ -114,14 +114,16 @@ loadMoreBtn.addEventListener('click', async () => {
       .getBoundingClientRect();
 
     window.scrollBy({
-      top: cardHeight * 2,
+      top: cardHeight * 3,
       behavior: 'smooth',
     });
   } catch (error) {
     console.error('Error loading additional images:', error);
   } finally {
-    alert(
-      'зробив рефакторинг, все одно не розумію до кінця і що з цим робити???'
-    );
+    let sum = totalImg - loadedImg;
+    iziToast.info({
+      message: `далі буде ...ще ... ${sum} ... картинок`,
+      position: 'topCenter',
+    });
   }
 });
