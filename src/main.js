@@ -30,7 +30,7 @@ searchForm.addEventListener('submit', async event => {
     loader.classList.add('hidden');
     iziToast.warning({
       message:
-        'Sorry, це типу що? порожнє поле у запиті? напиши кілька літер... і то не та кілька, що вконсервах продають :)',
+        'Sorry, це типу що? порожнє поле у запиті? напиши кілька літер... то не та кілька, що вконсервах продають :)',
       position: 'topCenter',
     });
     return;
