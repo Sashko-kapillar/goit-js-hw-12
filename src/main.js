@@ -30,7 +30,7 @@ searchForm.addEventListener('submit', async event => {
     loader.classList.add('hidden');
     iziToast.warning({
       message:
-        'Sorry, це типу що? порожнє поле у запиті? напиши щось людске...',
+        'Sorry, це типу що? порожнє поле у запиті? напиши кілька літер... і то не та кілька, що вконсервах продають :)',
       position: 'topCenter',
     });
     return;
@@ -123,7 +123,7 @@ loadMoreBtn.addEventListener('click', async () => {
   } finally {
     let sum = totalImg - loadedImg;
     iziToast.info({
-      message: `далі буде ...ще ... ${sum} ... картинок`,
+      message: `Прикинь - це ще не все ... далі буде ...ще ... ${sum} ... картинок`,
       position: 'topCenter',
     });
   }
